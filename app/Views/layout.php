@@ -10,7 +10,11 @@
     <header>
         <h1>AuthBoard</h1>
         <?php if (!empty($_SESSION['user'])): ?>
-            <nav><a href="/dashboard">Dashboard</a> | <a href="/logout">Logout</a></nav>
+            <nav>
+                <a href="/dashboard">Dashboard</a> | 
+                <a href="/feed">Feed</a> | 
+                <a href="/logout">Logout</a>
+            </nav>
         <?php endif; ?>
     </header>
 

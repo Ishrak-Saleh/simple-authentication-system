@@ -1,5 +1,5 @@
 <?php
-namespace App\Core;
+namespace app\Core;
 
 abstract class Controller {
     protected function view( $path,  $data = []) {

@@ -1,10 +1,10 @@
 <?php
-namespace App\Controllers;
+namespace app\Controllers;
 
-use App\Core\Controller;
-use App\Core\Session;
-use App\Core\Mailer;
-use App\Models\User;
+use app\Core\Controller;
+use app\Core\Session;
+use app\Core\Mailer;
+use app\Models\User;
 
 class AuthController extends Controller {
     public function showLogin() {

@@ -18,10 +18,11 @@ if (file_exists($envFile)) {
     }
 }
 
-use App\Core\Router;
-use App\Core\Session;
-use App\Controllers\AuthController;
-use App\Controllers\DashboardController;
+use app\Core\Router;
+use app\Core\Session;
+use app\Controllers\AuthController;
+use app\Controllers\DashboardController;
+use app\Controllers\FeedController;
 
 Session::start();
 
@@ -37,5 +38,9 @@ $router->get('/dashboard', fn() => $dash->index());
 $router->post('/register', fn() => $auth->register());
 $router->post('/login', fn() => $auth->login());
 $router->get('/logout', fn() => $auth->logout());
+
+// Feed routes
+$router->get('/feed', [FeedController::class, 'index']);
+$router->post('/feed/post', [FeedController::class, 'createPost']);
 
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');
