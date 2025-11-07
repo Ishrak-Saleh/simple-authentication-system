@@ -1,44 +1,69 @@
-# AuthBoard - Mini PHP Auth Project
+# Authboard - Social Feed Extension
 
-PHP version: 8.0+ (tested with PHP 8)
-A small teaching project demonstrating:
-- Registration & Login
-- Sessions
-- Simple Router
-- Namespaces & PSR-4 autoloading (composer)
-- Password hashing (password_hash)
-- Email sending (Mailtrap + PHPMailer)
-- Basic folder structure and simple styling
+**PHP version**: 8.2+  
+**Original Repository**: [nkb-bd/metro_wb_lab](https://github.com/nkb-bd/metro_wb_lab)
 
-## Requirements
-- PHP 8.0+
-- Composer (for dependencies)
-- MySQL (or MariaDB)
-- Local webserver (XAMPP, Laragon, etc.)
+This is a continuation and enhancement of the original Metro Web Lab assignment that transforms a basic authentication system into a full-featured social platform with feed functionality.
 
-## Setup
-1. Unzip the project into your web root (or point your vhost to `AuthBoard/public`).
-2. Copy `.env.example` to `.env` and fill values (DB and Mailtrap credentials).
-3. Create the database and import `sql/schema.sql`.
-   Example:
+## Enhanced Features
+### Core Authentication System (Original)
+- User registration & login with validation
+- Secure session management
+- Password hashing with bcrypt
+- Email sending integration (Mailtrap + PHPMailer)
+
+### Social Feed Extension (New)
+- **Post Creation**: Users can create text posts with optional images
+- **Image Upload**: Support for JPG, PNG, GIF, WebP (up to 10MB)
+- **Social Timeline**: View posts from all users in chronological order
+- **User Engagement**: Posts display author names and creation timestamps
+- **File Management**: Secure image upload and storage system
+
+## Tools Used
+- **Backend**: PHP 8.2+ with MVC architecture
+- **Database**: MySQL with PDO prepared statements
+- **Frontend**: HTML, CSS, PHP Templates
+- **Routing**: Custom PHP router
+- **Dependencies**: Composer, PHPMailer
+
+## Quick Setup
+1. **Clone & Configure**
+   ```bash
+   git clone https://github.com/Ishrak-Saleh/simple-authentication-system.git
+   cd simple-authentication-system
+   cp .env.example .env
+   # Edit .env with your database credentials
+   ```
+2. **Database Setup**
    ```sql
    CREATE DATABASE authboard;
    USE authboard;
-   -- then import the schema.sql file
+   # Import sql/schema.sql
    ```
-4. Install composer dependencies:
+3. **Install Dependencies**
    ```bash
    composer install
    ```
-5. Start the server (if using built-in PHP server for testing):
+4. **Run application**
    ```bash
-   cd public
-   php -S localhost:8000
+   php -S localhost:8000 -t public
    ```
-6. Visit `http://localhost:8000` (or your configured vhost).
+5. **Access**
+   Visit http://localhost:8000/
 
-## Notes for instructors
-- Students should update `.env` with their Mailtrap sandbox credentials.
-- The project uses a tiny .env loader (no external dotenv package required).
-- Encourage students to read files under `app/` to understand flow.
 
+## Key Features Demonstrated
+- **MVC Architecture** with proper separation of concerns
+- **Authentication System** with secure password handling
+- **Session Management** across page requests
+- **File Upload** with validation and security measures
+- **Social Feed** with multi-user content display
+- **Database Operations** using PDO with prepared statements
+- **Email Integration** for user notifications
+
+## Security Implementation
+- Password hashing with `password_hash()`
+- SQL injection prevention via PDO prepared statements
+- XSS protection with `htmlspecialchars()`
+- File upload validation (type, size, security)
+- Session-based authentication middleware
