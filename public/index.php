@@ -42,5 +42,8 @@ $router->get('/logout', fn() => $auth->logout());
 // Feed routes
 $router->get('/feed', [FeedController::class, 'index']);
 $router->post('/feed/post', [FeedController::class, 'createPost']);
+$router->post('/feed/delete', [FeedController::class, 'deletePost']);
+$router->get('/feed/edit', [FeedController::class, 'showEditPost']);
+$router->post('/feed/update', [FeedController::class, 'updatePost']);
 
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');
