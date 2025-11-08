@@ -57,6 +57,9 @@ ob_start();
                                     <h3 class="font-semibold text-white"><?= htmlspecialchars($post['user_name']) ?></h3>
                                     <p class="text-xs text-gray-400">
                                         <?= date('M j, Y \a\t g:i A', strtotime($post['created_at'])) ?>
+                                        <?php if ($post['updated_at'] && $post['updated_at'] !== $post['created_at']): ?>
+                                            <span class="text-gray-400 text-xs ml-1">• Edited</span>
+                                        <?php endif; ?>
                                     </p>
                                 </div>
                             </div>

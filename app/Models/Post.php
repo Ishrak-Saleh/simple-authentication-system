@@ -58,12 +58,10 @@ class Post {
     }
     public static function update(int $postId, int $userId, string $content, ?string $imagePath = null): bool {
         if ($imagePath !== null) {
-            // If we have an image path (including empty string), update both content and image_path
-            $stmt = self::connect()->prepare('UPDATE posts SET content = ?, image_path = ? WHERE id = ? AND user_id = ?');
+            $stmt = self::connect()->prepare('UPDATE posts SET content = ?, image_path = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?');
             return $stmt->execute([$content, $imagePath, $postId, $userId]);
         } else {
-            // If imagePath is null, set image_path to NULL in database
-            $stmt = self::connect()->prepare('UPDATE posts SET content = ?, image_path = NULL WHERE id = ? AND user_id = ?');
+            $stmt = self::connect()->prepare('UPDATE posts SET content = ?, image_path = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?');
             return $stmt->execute([$content, $postId, $userId]);
         }
     }

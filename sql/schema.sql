@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
   INDEX `idx_user_id` (`user_id`),
   INDEX `idx_created_at` (`created_at`)
+  ALTER TABLE posts ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Example seed
