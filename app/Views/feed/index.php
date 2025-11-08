@@ -6,7 +6,7 @@ ob_start();
 
     <div class="bg-dark-200 rounded-lg shadow-sm border border-dark-100 p-4">
         <div class="flex items-center space-x-3 mb-4">
-            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
                 <?= strtoupper(substr($user['name'], 0, 1)) ?>
             </div>
             <button onclick="document.getElementById('postModal').classList.remove('hidden')" 
@@ -50,11 +50,16 @@ ob_start();
                     <div class="p-4">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold <?= $post['user_id'] == $user['id'] ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-green-500' ?>">
                                     <?= strtoupper(substr($post['user_name'], 0, 1)) ?>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-white"><?= htmlspecialchars($post['user_name']) ?></h3>
+                                    <h3 class="font-semibold text-white <?= $post['user_id'] == $user['id'] ? 'text-pink-400' : '' ?>">
+                                        <?= htmlspecialchars($post['user_name']) ?>
+                                        <?php if ($post['user_id'] == $user['id']): ?>
+                                            <span class="text-xs text-pink-300 ml-1">(You)</span>
+                                        <?php endif; ?>
+                                    </h3>
                                     <p class="text-xs text-gray-400">
                                         <?= date('M j, Y \a\t g:i A', strtotime($post['created_at'])) ?>
                                         <?php if ($post['updated_at'] && $post['updated_at'] !== $post['created_at']): ?>
@@ -142,11 +147,11 @@ ob_start();
         
         <form method="POST" action="/feed/post" enctype="multipart/form-data" class="p-4 space-y-4">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
                     <?= strtoupper(substr($user['name'], 0, 1)) ?>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?></h4>
+                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-pink-400 text-sm">(You)</span></h4>
                 </div>
             </div>
             
@@ -199,11 +204,11 @@ ob_start();
             <input type="hidden" name="post_id" id="editPostId">
             
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
                     <?= strtoupper(substr($user['name'], 0, 1)) ?>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?></h4>
+                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-pink-400 text-sm">(You)</span></h4>
                 </div>
             </div>
             
