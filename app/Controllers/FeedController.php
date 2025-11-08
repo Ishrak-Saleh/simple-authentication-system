@@ -14,7 +14,7 @@ class FeedController extends Controller {
             exit;
         }
 
-        $posts = Post::getAllWithUsers();
+        $posts = Post::getAllWithUsersAndLikes($user['id']);
         $this->view('feed/index.php', ['user' => $user, 'posts' => $posts]);
     }
 
@@ -120,7 +120,7 @@ class FeedController extends Controller {
             exit;
         }
 
-        $posts = Post::getAllWithUsers();
+        $posts = Post::getAllWithUsersAndLikes($user['id']);
         $this->view('feed/index.php', [
             'user' => $user, 
             'posts' => $posts,
@@ -188,5 +188,56 @@ class FeedController extends Controller {
         Session::set('success', 'Post updated successfully!');
         header('Location: /feed');
         exit;
+    }
+
+    // Like functionality
+    public function likePost() {
+        $user = Session::get('user');
+        if (!$user) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+            return;
+        }
+
+        $postId = (int)($_POST['post_id'] ?? 0);
+        
+        if ($postId > 0) {
+            $success = Post::like($postId, $user['id']);
+            $likeCount = Post::getLikesCount($postId);
+            
+            echo json_encode([
+                'success' => $success,
+                'likeCount' => $likeCount,
+                'isLiked' => true
+            ]);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid post ID']);
+        }
+    }
+
+    public function unlikePost() {
+        $user = Session::get('user');
+        if (!$user) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+            return;
+        }
+
+        $postId = (int)($_POST['post_id'] ?? 0);
+        
+        if ($postId > 0) {
+            $success = Post::unlike($postId, $user['id']);
+            $likeCount = Post::getLikesCount($postId);
+            
+            echo json_encode([
+                'success' => $success,
+                'likeCount' => $likeCount,
+                'isLiked' => false
+            ]);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid post ID']);
+        }
     }
 }

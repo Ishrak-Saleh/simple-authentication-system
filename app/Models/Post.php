@@ -33,6 +33,26 @@ class Post {
         return $stmt->fetchAll();
     }
 
+    public static function getAllWithUsersAndLikes(int $currentUserId): array {
+        $stmt = self::connect()->prepare('
+            SELECT p.*, 
+                   u.name as user_name, 
+                   u.email as user_email,
+                   COUNT(pl.id) as like_count,
+                   EXISTS(
+                       SELECT 1 FROM post_likes 
+                       WHERE post_id = p.id AND user_id = ?
+                   ) as is_liked
+            FROM posts p 
+            JOIN users u ON p.user_id = u.id 
+            LEFT JOIN post_likes pl ON p.id = pl.post_id
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
+        ');
+        $stmt->execute([$currentUserId]);
+        return $stmt->fetchAll();
+    }
+
     public static function findByUserId(int $userId): array {
         $stmt = self::connect()->prepare('
             SELECT p.*, u.name as user_name 
@@ -46,8 +66,8 @@ class Post {
     }
 
     public static function delete(int $postId, int $userId): bool {
-    $stmt = self::connect()->prepare('DELETE FROM posts WHERE id = ? AND user_id = ?');
-    return $stmt->execute([$postId, $userId]);
+        $stmt = self::connect()->prepare('DELETE FROM posts WHERE id = ? AND user_id = ?');
+        return $stmt->execute([$postId, $userId]);
     }
 
     public static function findById(int $postId): ?array {
@@ -56,6 +76,7 @@ class Post {
         $row = $stmt->fetch();
         return $row ?: null;
     }
+
     public static function update(int $postId, int $userId, string $content, ?string $imagePath = null): bool {
         if ($imagePath !== null) {
             $stmt = self::connect()->prepare('UPDATE posts SET content = ?, image_path = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?');
@@ -64,5 +85,44 @@ class Post {
             $stmt = self::connect()->prepare('UPDATE posts SET content = ?, image_path = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?');
             return $stmt->execute([$content, $postId, $userId]);
         }
+    }
+
+    // Like functionality methods
+    public static function like(int $postId, int $userId): bool {
+        $stmt = self::connect()->prepare('
+            INSERT IGNORE INTO post_likes (post_id, user_id) 
+            VALUES (?, ?)
+        ');
+        return $stmt->execute([$postId, $userId]);
+    }
+
+    public static function unlike(int $postId, int $userId): bool {
+        $stmt = self::connect()->prepare('
+            DELETE FROM post_likes 
+            WHERE post_id = ? AND user_id = ?
+        ');
+        return $stmt->execute([$postId, $userId]);
+    }
+
+    public static function getLikesCount(int $postId): int {
+        $stmt = self::connect()->prepare('
+            SELECT COUNT(*) as like_count 
+            FROM post_likes 
+            WHERE post_id = ?
+        ');
+        $stmt->execute([$postId]);
+        $result = $stmt->fetch();
+        return (int)($result['like_count'] ?? 0);
+    }
+
+    public static function isLikedByUser(int $postId, int $userId): bool {
+        $stmt = self::connect()->prepare('
+            SELECT 1 
+            FROM post_likes 
+            WHERE post_id = ? AND user_id = ? 
+            LIMIT 1
+        ');
+        $stmt->execute([$postId, $userId]);
+        return (bool)$stmt->fetch();
     }
 }

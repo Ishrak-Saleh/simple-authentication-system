@@ -45,5 +45,7 @@ $router->post('/feed/post', [FeedController::class, 'createPost']);
 $router->post('/feed/delete', [FeedController::class, 'deletePost']);
 $router->get('/feed/edit', [FeedController::class, 'showEditPost']);
 $router->post('/feed/update', [FeedController::class, 'updatePost']);
+$router->post('/feed/like', [FeedController::class, 'likePost']);
+$router->post('/feed/unlike', [FeedController::class, 'unlikePost']);
 
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');

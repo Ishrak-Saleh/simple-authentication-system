@@ -50,14 +50,15 @@ ob_start();
                     <div class="p-4">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold <?= $post['user_id'] == $user['id'] ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-green-500' ?>">
+                                <!-- Updated Avatar with purple for current user, blue for others -->
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold <?= $post['user_id'] == $user['id'] ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-purple-500' ?>">
                                     <?= strtoupper(substr($post['user_name'], 0, 1)) ?>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-white <?= $post['user_id'] == $user['id'] ? 'text-pink-400' : '' ?>">
+                                    <h3 class="font-semibold text-white <?= $post['user_id'] == $user['id'] ? 'text-purple-300' : '' ?>">
                                         <?= htmlspecialchars($post['user_name']) ?>
                                         <?php if ($post['user_id'] == $user['id']): ?>
-                                            <span class="text-xs text-pink-300 ml-1">(You)</span>
+                                            <span class="text-xs text-purple-300 ml-1">(You)</span>
                                         <?php endif; ?>
                                     </h3>
                                     <p class="text-xs text-gray-400">
@@ -114,13 +115,17 @@ ob_start();
                     </div>
                     <?php endif; ?>
 
+                    <!-- Like Button Section -->
                     <div class="px-4 py-3 border-t border-dark-100">
                         <div class="flex space-x-4 text-gray-400">
-                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button class="flex items-center space-x-1 transition-colors like-button <?= $post['is_liked'] ? 'text-red-500' : 'hover:text-red-500' ?>" 
+                                    data-post-id="<?= $post['id'] ?>" 
+                                    data-liked="<?= $post['is_liked'] ? 'true' : 'false' ?>">
+                                <svg class="w-5 h-5" fill="<?= $post['is_liked'] ? 'currentColor' : 'none' ?>" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
-                                <span>Like</span>
+                                <span class="like-count"><?= $post['like_count'] ?? 0 ?></span>
+                                <span></span>
                             </button>
                         </div>
                     </div>
@@ -151,7 +156,7 @@ ob_start();
                     <?= strtoupper(substr($user['name'], 0, 1)) ?>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-pink-400 text-sm">(You)</span></h4>
+                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-purple-300 text-sm">(You)</span></h4>
                 </div>
             </div>
             
@@ -208,7 +213,7 @@ ob_start();
                     <?= strtoupper(substr($user['name'], 0, 1)) ?>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-pink-400 text-sm">(You)</span></h4>
+                    <h4 class="font-semibold text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-purple-300 text-sm">(You)</span></h4>
                 </div>
             </div>
             
@@ -350,6 +355,90 @@ document.getElementById('editImage').addEventListener('change', function(e) {
         fileText.textContent = 'Change Photo';
         fileText.classList.remove('text-primary');
     }
+});
+
+// Like/Unlike functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
+    
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            const isLiked = this.getAttribute('data-liked') === 'true';
+            const likeCountElement = this.querySelector('.like-count');
+            const heartIcon = this.querySelector('svg');
+            
+            // Optimistic UI update
+            const currentLikes = parseInt(likeCountElement.textContent);
+            let newLikes;
+            
+            if (isLiked) {
+                // Unlike
+                newLikes = currentLikes - 1;
+                this.setAttribute('data-liked', 'false');
+                this.classList.remove('text-red-500');
+                this.classList.add('hover:text-red-500');
+                heartIcon.setAttribute('fill', 'none');
+            } else {
+                // Like
+                newLikes = currentLikes + 1;
+                this.setAttribute('data-liked', 'true');
+                this.classList.add('text-red-500');
+                this.classList.remove('hover:text-red-500');
+                heartIcon.setAttribute('fill', 'currentColor');
+            }
+            likeCountElement.textContent = newLikes;
+            
+            // Send AJAX request
+            const formData = new FormData();
+            formData.append('post_id', postId);
+            
+            const url = isLiked ? '/feed/unlike' : '/feed/like';
+            
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    // Revert optimistic update if failed
+                    likeCountElement.textContent = currentLikes;
+                    if (isLiked) {
+                        this.setAttribute('data-liked', 'true');
+                        this.classList.add('text-red-500');
+                        this.classList.remove('hover:text-red-500');
+                        heartIcon.setAttribute('fill', 'currentColor');
+                    } else {
+                        this.setAttribute('data-liked', 'false');
+                        this.classList.remove('text-red-500');
+                        this.classList.add('hover:text-red-500');
+                        heartIcon.setAttribute('fill', 'none');
+                    }
+                    console.error('Like action failed:', data.message);
+                } else {
+                    // Update with actual count from server
+                    likeCountElement.textContent = data.likeCount;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Revert optimistic update
+                likeCountElement.textContent = currentLikes;
+                if (isLiked) {
+                    this.setAttribute('data-liked', 'true');
+                    this.classList.add('text-red-500');
+                    this.classList.remove('hover:text-red-500');
+                    heartIcon.setAttribute('fill', 'currentColor');
+                } else {
+                    this.setAttribute('data-liked', 'false');
+                    this.classList.remove('text-red-500');
+                    this.classList.add('hover:text-red-500');
+                    heartIcon.setAttribute('fill', 'none');
+                }
+            });
+        });
+    });
 });
 </script>
 <?php

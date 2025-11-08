@@ -9,7 +9,7 @@ ob_start();
                 <?= strtoupper(substr($user['name'], 0, 1)) ?>
             </div>
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome, <?= htmlspecialchars($user['name']) ?>!</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome, <?= htmlspecialchars($user['name']) ?>! <span class="text-purple-300 text-lg">(You)</span></h2>
                 <p class="text-gray-600 dark:text-gray-300">Your email: <?= htmlspecialchars($user['email']) ?></p>
             </div>
         </div>
