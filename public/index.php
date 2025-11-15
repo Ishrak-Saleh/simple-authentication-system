@@ -47,5 +47,6 @@ $router->get('/feed/edit', [FeedController::class, 'showEditPost']);
 $router->post('/feed/update', [FeedController::class, 'updatePost']);
 $router->post('/feed/like', [FeedController::class, 'likePost']);
 $router->post('/feed/unlike', [FeedController::class, 'unlikePost']);
+$router->post('/theme/toggle', [FeedController::class, 'toggleTheme']);
 
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');

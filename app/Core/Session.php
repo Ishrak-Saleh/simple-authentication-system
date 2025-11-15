@@ -24,4 +24,13 @@ class Session {
             session_destroy();
         }
     }
+
+    // Theme management methods
+    public static function setTheme(string $theme): void {
+        $_SESSION['theme'] = $theme;
+    }
+
+    public static function getTheme(): string {
+        return $_SESSION['theme'] ?? 'system';
+    }
 }

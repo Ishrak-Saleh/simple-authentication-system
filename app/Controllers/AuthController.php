@@ -46,6 +46,8 @@ class AuthController extends Controller {
         $user = User::findByEmail($email);
         if ($user && password_verify($password, $user['password'])) {
             Session::set('user', ['id' => $user['id'], 'name' => $user['name'], 'email' => $user['email']]);
+            // Set default theme preference
+            Session::set('theme', 'dark'); // Default to dark mode
             header('Location: /dashboard');
             return;
         }
