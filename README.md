@@ -12,33 +12,44 @@ This is a continuation and enhancement of the original Metro Web Lab assignment 
 - Password hashing with bcrypt algorithm
 - Email sending integration (Mailtrap + PHPMailer)
 
-### Social Feed Extension (New)
-- **Post Management**: Create, edit, and delete posts with rich content
-- **Image Upload**: Support for JPG, PNG, GIF, WebP formats (up to 25MB)
-- **Social Timeline**: Multi-user content display in chronological order
-- **User Engagement**: Real-time like system with AJAX interactions
-- **User Distinction**: Color-coded profiles with visual identification
-- **File Management**: Secure image upload, validation, and storage system
-- **Activity Dashboard**: User statistics with post counts and like analytics
+### Social Feed Extension (Enhanced)
+- **Post Management**: Create, edit, and delete posts with rich text content and image support
+- **Image Upload**: Multi-format support (JPG, PNG, GIF, WebP) with 25MB file size limit
+- **Social Timeline**: Multi-user content feed with chronological ordering and real-time updates
+- **User Engagement**: AJAX-powered like/unlike system with instant UI feedback
+- **User Profiles**: Comprehensive profile system with bio sections and public profile views
+- **Profile Pictures**: Custom avatar uploads with image validation and management
+- **File Management**: Secure file upload system with type validation and storage organization
 
-### Advanced Features (New)
-- **Real-time Interactions**: AJAX-powered like/unlike without page refresh
-- **User Analytics**: Dashboard with total posts and likes tracking
-- **Visual Feedback**: Optimistic UI updates with fallback handling
-- **Theme System**: Dark/light mode toggle with localStorage persistence
-- **Theme Consistency**: Full UI support across all components with smooth transitions
-- **System Integration**: Automatic OS theme detection with manual override
-- **Password Visibility**: Toggle show/hide functionality with proper icons
+### Advanced Features (Enhanced)
+- **Real-time Interactions**: AJAX-powered like system with optimistic UI updates
+- **User Analytics**: Comprehensive dashboard with post statistics and engagement metrics
+- **Profile System**: Bio editing with character limits and real-time saving
+- **Public Profiles**: Limited-access user profiles with activity statistics
+- **Dynamic Routing**: URL parameter support for user profile links (/profile/user/{id})
+- **Theme System**: Complete dark/light mode toggle with system preference detection
+- **Theme Persistence**: localStorage-based theme saving with automatic OS detection
+- **Password Visibility**: Toggle show/hide functionality with proper SVG icons
 
-## Tools Used
-- **Backend**: PHP 8.2+ with MVC architecture and custom routing
+### User Interface & Experience
+- **Responsive Design**: Mobile-first approach with Tailwind CSS breakpoints
+- **Visual Feedback**: Loading states, success/error messages, and hover effects
+- **Accessibility**: Proper ARIA labels, keyboard navigation, and semantic HTML
+- **Consistent Design**: Unified header system across all application pages
+- **Modal System**: Create and edit post modals with image preview capabilities
+- **Navigation**: Intuitive header navigation with profile picture integration
+
+## Tools & Technologies
+- **Backend**: PHP 8.2+ with custom MVC architecture and RESTful routing
 - **Database**: MySQL with PDO prepared statements and foreign key constraints
-- **Frontend**: Tailwind CSS, JavaScript (ES6+), responsive design
-- **Routing**: Custom PHP router with RESTful endpoint handling
-- **Dependencies**: Composer, PHPMailer, PDO MySQL driver
-- **Development**: XAMPP, phpMyAdmin, Git version control
-- **Theme Engine**: Tailwind CSS dark mode class strategy with JavaScript persistence
-
+- **Frontend**: Tailwind CSS, vanilla JavaScript (ES6+), responsive grid layouts
+- **Routing**: Custom PHP router with dynamic parameter support and RESTful endpoints
+- **File Handling**: Secure upload system with MIME type validation and size limits
+- **Session Management**: Custom session handler with user state persistence
+- **Dependencies**: Composer, PHPMailer for email functionality, PDO MySQL driver
+- **Development Stack**: XAMPP, phpMyAdmin, Git version control with feature branching
+- **Theme Engine**: Tailwind CSS dark mode class strategy with JavaScript persistence layer
+- **AJAX Integration**: Fetch API for real-time interactions without page reloads
 
 ## Quick Setup
 1. **Clone & Configure**
@@ -64,7 +75,6 @@ This is a continuation and enhancement of the original Metro Web Lab assignment 
    ```
 5. **Access**
    Visit http://localhost:8000/
-
 
 ## Key Features Demonstrated
 - **MVC Architecture** with proper separation of concerns and organized code structure
