@@ -25,7 +25,9 @@ This is a continuation and enhancement of the original Metro Web Lab assignment 
 - **Real-time Interactions**: AJAX-powered like/unlike without page refresh
 - **User Analytics**: Dashboard with total posts and likes tracking
 - **Visual Feedback**: Optimistic UI updates with fallback handling
-- **Enhanced UI**: Dark/light theme consistency across all components
+- **Theme System**: Dark/light mode toggle with localStorage persistence
+- **Theme Consistency**: Full UI support across all components with smooth transitions
+- **System Integration**: Automatic OS theme detection with manual override
 - **Password Visibility**: Toggle show/hide functionality with proper icons
 
 ## Tools Used
@@ -35,6 +37,7 @@ This is a continuation and enhancement of the original Metro Web Lab assignment 
 - **Routing**: Custom PHP router with RESTful endpoint handling
 - **Dependencies**: Composer, PHPMailer, PDO MySQL driver
 - **Development**: XAMPP, phpMyAdmin, Git version control
+- **Theme Engine**: Tailwind CSS dark mode class strategy with JavaScript persistence
 
 
 ## Quick Setup
