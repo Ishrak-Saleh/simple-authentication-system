@@ -8,9 +8,11 @@ class DashboardController extends Controller {
     public function index() {
         $user = Session::get('user');
         if (!$user) {
-            header('Location: /metro_wb_lab/public/login');
+            header('Location: /login');
             exit;
         }
-        $this->view('dashboard.php', ['user' => $user]);
+        
+        header('Location: /feed');
+        exit;
     }
 }

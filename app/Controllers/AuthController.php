@@ -45,14 +45,23 @@ class AuthController extends Controller {
 
         $user = User::findByEmail($email);
         if ($user && password_verify($password, $user['password'])) {
-            Session::set('user', ['id' => $user['id'], 'name' => $user['name'], 'email' => $user['email']]);
-            // Set default theme preference
-            Session::set('theme', 'dark'); // Default to dark mode
-            header('Location: /dashboard');
-            return;
+            Session::set('user', [
+                'id' => $user['id'], 
+                'name' => $user['name'], 
+                'email' => $user['email'],
+                'profile_picture' => $user['profile_picture'] ?? null,
+                'bio' => $user['bio'] ?? null
+            ]);
+            
+            // Redirect to feed (main social media page)
+            header('Location: /feed');
+            exit;
         }
 
-        echo 'Invalid credentials.';
+        // Show error message
+        Session::set('error', 'Invalid credentials.');
+        header('Location: /login');
+        exit;
     }
 
     public function logout() {

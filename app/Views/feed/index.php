@@ -2,7 +2,25 @@
 $title = 'Feed | AuthBoard';
 ob_start();
 ?>
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- User Profile Card (Same as Dashboard) -->
+    <div class="bg-white dark:bg-dark-200 rounded-lg shadow-sm border dark:border-dark-100 p-6">
+        <div class="flex items-center space-x-4 mb-6">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl overflow-hidden <?= empty($user['profile_picture']) ? 'bg-gradient-to-r from-purple-500 to-pink-500' : '' ?>">
+                <?php if (!empty($user['profile_picture'])): ?>
+                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" 
+                         alt="<?= htmlspecialchars($user['name']) ?>" 
+                         class="w-full h-full object-cover">
+                <?php else: ?>
+                    <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                <?php endif; ?>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome, <?= htmlspecialchars($user['name']) ?>! <span class="text-purple-300 text-lg">(You)</span></h2>
+                <p class="text-gray-600 dark:text-gray-300">Your email: <?= htmlspecialchars($user['email']) ?></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Create Post Button Card -->
     <div class="bg-white dark:bg-dark-200 rounded-lg shadow-sm border border-gray-200 dark:border-dark-100 p-4">
@@ -71,9 +89,14 @@ ob_start();
                                 </div>
                                 <div>
                                     <h3 class="font-semibold text-gray-900 dark:text-white <?= $post['user_id'] == $user['id'] ? 'text-purple-600 dark:text-purple-300' : '' ?>">
-                                        <?= htmlspecialchars($post['user_name']) ?>
                                         <?php if ($post['user_id'] == $user['id']): ?>
+                                            <?= htmlspecialchars($post['user_name']) ?>
                                             <span class="text-xs text-purple-600 dark:text-purple-300 ml-1">(You)</span>
+                                        <?php else: ?>
+                                            <a href="/profile/user/<?= $post['user_id'] ?>" 
+                                               class="hover:text-primary hover:underline transition-colors">
+                                                <?= htmlspecialchars($post['user_name']) ?>
+                                            </a>
                                         <?php endif; ?>
                                     </h3>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">

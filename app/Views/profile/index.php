@@ -72,6 +72,51 @@ foreach ($userPosts as $post) {
         </div>
     </div>
 
+    <!-- Bio Section -->
+    <div class="bg-white dark:bg-dark-200 rounded-lg shadow-sm border border-gray-200 dark:border-dark-100 p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">About Me</h3>
+            <button onclick="toggleBioEdit()" 
+                    class="text-primary hover:text-blue-600 transition-colors font-medium">
+                Edit Bio
+            </button>
+        </div>
+        
+        <!-- Bio Display -->
+        <div id="bioDisplay" class="<?= empty($user['bio']) ? 'hidden' : '' ?>">
+            <p class="text-gray-600 dark:text-gray-300 text-lg"><?= htmlspecialchars($user['bio'] ?? '') ?></p>
+        </div>
+        
+        <!-- No Bio Message -->
+        <div id="noBioMessage" class="<?= !empty($user['bio']) ? 'hidden' : '' ?>">
+            <p class="text-gray-500 dark:text-gray-400 italic">No bio yet. Click "Edit Bio" to add one!</p>
+        </div>
+        
+        <!-- Bio Edit Form -->
+        <div id="bioEditForm" class="hidden mt-4">
+            <form id="bioForm" class="space-y-3">
+                <textarea name="bio" 
+                          placeholder="Tell us about yourself..." 
+                          class="w-full h-24 border border-gray-300 dark:border-dark-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-dark-300 dark:text-white p-3 resize-none"
+                          maxlength="500"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500 dark:text-gray-400" id="bioCharCount">500 characters remaining</span>
+                    <div class="space-x-2">
+                        <button type="button" 
+                                onclick="toggleBioEdit()" 
+                                class="px-4 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors font-medium">
+                            Save Bio
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Total Posts Card -->
@@ -279,6 +324,90 @@ function removeProfilePicture() {
         alert('An error occurred while removing the profile picture.');
     });
 }
+
+// Bio functionality
+function toggleBioEdit() {
+    const display = document.getElementById('bioDisplay');
+    const noBio = document.getElementById('noBioMessage');
+    const editForm = document.getElementById('bioEditForm');
+    const textarea = document.querySelector('#bioForm textarea');
+    
+    if (editForm.classList.contains('hidden')) {
+        // Switching to edit mode
+        display.classList.add('hidden');
+        noBio.classList.add('hidden');
+        editForm.classList.remove('hidden');
+        updateCharCount(textarea);
+        textarea.focus();
+    } else {
+        // Switching back to display mode
+        editForm.classList.add('hidden');
+        if (textarea.value.trim() === '') {
+            noBio.classList.remove('hidden');
+            display.classList.add('hidden');
+        } else {
+            display.classList.remove('hidden');
+            noBio.classList.add('hidden');
+        }
+    }
+}
+
+function updateCharCount(textarea) {
+    const remaining = 500 - textarea.value.length;
+    const charCount = document.getElementById('bioCharCount');
+    charCount.textContent = remaining + ' characters remaining';
+    
+    if (remaining < 50) {
+        charCount.classList.add('text-red-500');
+        charCount.classList.remove('text-gray-500', 'dark:text-gray-400');
+    } else {
+        charCount.classList.remove('text-red-500');
+        charCount.classList.add('text-gray-500', 'dark:text-gray-400');
+    }
+}
+
+// Bio form submission
+document.getElementById('bioForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/profile/bio/update', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update bio display
+            const bioDisplay = document.getElementById('bioDisplay');
+            const noBioMessage = document.getElementById('noBioMessage');
+            
+            if (data.bio.trim() === '') {
+                bioDisplay.classList.add('hidden');
+                noBioMessage.classList.remove('hidden');
+            } else {
+                bioDisplay.innerHTML = `<p class="text-gray-600 dark:text-gray-300 text-lg">${data.bio}</p>`;
+                bioDisplay.classList.remove('hidden');
+                noBioMessage.classList.add('hidden');
+            }
+            
+            toggleBioEdit(); // Switch back to display mode
+            alert(data.message);
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating your bio.');
+    });
+});
+
+// Character count for bio textarea
+document.querySelector('#bioForm textarea').addEventListener('input', function() {
+    updateCharCount(this);
+});
 </script>
 <?php
 $content = ob_get_clean();

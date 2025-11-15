@@ -46,4 +46,21 @@ class User {
         $row = $stmt->fetch();
         return $row ?: null;
     }
+
+    public static function updateBio(int $userId, string $bio): bool {
+        $stmt = self::connect()->prepare('UPDATE users SET bio = ? WHERE id = ?');
+        return $stmt->execute([$bio, $userId]);
+    }
+
+    public static function getPublicProfile(int $userId): ?array {
+        $stmt = self::connect()->prepare('
+            SELECT id, name, profile_picture, bio, created_at 
+            FROM users 
+            WHERE id = ? 
+            LIMIT 1
+        ');
+        $stmt->execute([$userId]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
 }

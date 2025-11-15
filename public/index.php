@@ -54,5 +54,7 @@ $router->post('/theme/toggle', [FeedController::class, 'toggleTheme']);
 $router->get('/profile', [ProfileController::class, 'showProfile']);
 $router->post('/profile/picture/update', [ProfileController::class, 'updateProfilePicture']);
 $router->post('/profile/picture/remove', [ProfileController::class, 'removeProfilePicture']);
+$router->post('/profile/bio/update', [ProfileController::class, 'updateBio']);
+$router->get('/profile/user/{id}', [ProfileController::class, 'showPublicProfile']);
 
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');

@@ -127,4 +127,70 @@ class ProfileController extends Controller {
 
         return '/uploads/profiles/' . $filename;
     }
+    public function updateBio() {
+    $user = Session::get('user');
+    if (!$user) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+        return;
+    }
+
+    $bio = trim($_POST['bio'] ?? '');
+    
+    if (strlen($bio) > 500) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Bio must be less than 500 characters']);
+        return;
+    }
+
+    try {
+        User::updateBio($user['id'], $bio);
+        
+        // Update session
+        Session::set('user', array_merge($user, ['bio' => $bio]));
+        
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Bio updated successfully!',
+            'bio' => $bio
+        ]);
+    } catch (\Exception $e) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+    public function showPublicProfile($userId) {
+        $currentUser = Session::get('user');
+        if (!$currentUser) {
+            header('Location: /login');
+            exit;
+        }
+
+        $profileUser = User::getPublicProfile($userId);
+        if (!$profileUser) {
+            Session::set('error', 'User not found');
+            header('Location: /feed');
+            exit;
+        }
+
+        // Get user's posts (public information)
+        $userPosts = Post::findByUserId($userId);
+        $totalPosts = count($userPosts);
+        
+        // Calculate total likes
+        $totalLikes = 0;
+        foreach ($userPosts as $post) {
+            $totalLikes += Post::getLikesCount($post['id']);
+        }
+
+        $this->view('profile/public.php', [
+            'user' => $currentUser,
+            'profileUser' => $profileUser,
+            'userPosts' => $userPosts,
+            'totalPosts' => $totalPosts,
+            'totalLikes' => $totalLikes,
+            'isOwnProfile' => $profileUser['id'] == $currentUser['id']
+        ]);
+    }
 }
