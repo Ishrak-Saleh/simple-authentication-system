@@ -16,8 +16,14 @@ foreach ($userPosts as $post) {
     <!-- User Profile Card -->
     <div class="bg-white dark:bg-dark-200 rounded-lg shadow-sm border dark:border-dark-100 p-6">
         <div class="flex items-center space-x-4 mb-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl">
-                <?= strtoupper(substr($user['name'], 0, 1)) ?>
+            <div class="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl overflow-hidden <?= empty($user['profile_picture']) ? 'bg-gradient-to-r from-purple-500 to-pink-500' : '' ?>">
+                <?php if (!empty($user['profile_picture'])): ?>
+                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" 
+                         alt="<?= htmlspecialchars($user['name']) ?>" 
+                         class="w-full h-full object-cover">
+                <?php else: ?>
+                    <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                <?php endif; ?>
             </div>
             <div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome, <?= htmlspecialchars($user['name']) ?>! <span class="text-purple-300 text-lg">(You)</span></h2>

@@ -22,27 +22,18 @@ class Post {
         return (int)self::connect()->lastInsertId();
     }
 
-    public static function getAllWithUsers(): array {
-        $stmt = self::connect()->prepare('
-            SELECT p.*, u.name as user_name, u.email as user_email 
-            FROM posts p 
-            JOIN users u ON p.user_id = u.id 
-            ORDER BY p.created_at DESC
-        ');
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
 
-    public static function getAllWithUsersAndLikes(int $currentUserId): array {
+        public static function getAllWithUsersAndLikes(int $currentUserId): array {
         $stmt = self::connect()->prepare('
             SELECT p.*, 
-                   u.name as user_name, 
-                   u.email as user_email,
-                   COUNT(pl.id) as like_count,
-                   EXISTS(
-                       SELECT 1 FROM post_likes 
-                       WHERE post_id = p.id AND user_id = ?
-                   ) as is_liked
+                u.name as user_name, 
+                u.email as user_email,
+                u.profile_picture as user_profile_picture,  -- ADD THIS
+                COUNT(pl.id) as like_count,
+                EXISTS(
+                    SELECT 1 FROM post_likes 
+                    WHERE post_id = p.id AND user_id = ?
+                ) as is_liked
             FROM posts p 
             JOIN users u ON p.user_id = u.id 
             LEFT JOIN post_likes pl ON p.id = pl.post_id
@@ -55,13 +46,24 @@ class Post {
 
     public static function findByUserId(int $userId): array {
         $stmt = self::connect()->prepare('
-            SELECT p.*, u.name as user_name 
+            SELECT p.*, u.name as user_name, u.profile_picture as user_profile_picture  -- ADD THIS
             FROM posts p 
             JOIN users u ON p.user_id = u.id 
             WHERE p.user_id = ? 
             ORDER BY p.created_at DESC
         ');
         $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
+    public static function getAllWithUsers(): array {
+        $stmt = self::connect()->prepare('
+            SELECT p.*, u.name as user_name, u.email as user_email, u.profile_picture as user_profile_picture  -- ADD THIS
+            FROM posts p 
+            JOIN users u ON p.user_id = u.id 
+            ORDER BY p.created_at DESC
+        ');
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 

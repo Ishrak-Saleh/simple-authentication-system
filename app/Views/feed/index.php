@@ -7,8 +7,15 @@ ob_start();
     <!-- Create Post Button Card -->
     <div class="bg-white dark:bg-dark-200 rounded-lg shadow-sm border border-gray-200 dark:border-dark-100 p-4">
         <div class="flex items-center space-x-3 mb-4">
-            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
-                <?= strtoupper(substr($user['name'], 0, 1)) ?>
+            <!-- User Avatar with Profile Picture Support -->
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden <?= empty($user['profile_picture']) ? 'bg-gradient-to-r from-purple-500 to-pink-500' : '' ?>">
+                <?php if (!empty($user['profile_picture'])): ?>
+                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" 
+                         alt="<?= htmlspecialchars($user['name']) ?>" 
+                         class="w-full h-full object-cover">
+                <?php else: ?>
+                    <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                <?php endif; ?>
             </div>
             <button onclick="document.getElementById('postModal').classList.remove('hidden')" 
                     class="flex-1 bg-gray-100 dark:bg-dark-100 text-gray-500 dark:text-gray-400 text-left px-4 py-3 rounded-full hover:bg-gray-200 dark:hover:bg-dark-300 transition-colors">
@@ -52,9 +59,15 @@ ob_start();
                     <div class="p-4">
                         <div class="flex justify-between items-start">
                             <div class="flex items-center space-x-3">
-                                <!-- Avatar -->
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold <?= $post['user_id'] == $user['id'] ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-purple-500' ?>">
-                                    <?= strtoupper(substr($post['user_name'], 0, 1)) ?>
+                                <!-- Avatar with Profile Picture Support -->
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden <?= $post['user_id'] == $user['id'] ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-purple-500' ?>">
+                                    <?php if (!empty($post['user_profile_picture'])): ?>
+                                        <img src="<?= htmlspecialchars($post['user_profile_picture']) ?>" 
+                                             alt="<?= htmlspecialchars($post['user_name']) ?>" 
+                                             class="w-full h-full object-cover">
+                                    <?php else: ?>
+                                        <?= strtoupper(substr($post['user_name'], 0, 1)) ?>
+                                    <?php endif; ?>
                                 </div>
                                 <div>
                                     <h3 class="font-semibold text-gray-900 dark:text-white <?= $post['user_id'] == $user['id'] ? 'text-purple-600 dark:text-purple-300' : '' ?>">
@@ -154,8 +167,15 @@ ob_start();
         
         <form method="POST" action="/feed/post" enctype="multipart/form-data" class="p-4 space-y-4">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
-                    <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                <!-- User Avatar in Modal -->
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden <?= empty($user['profile_picture']) ? 'bg-gradient-to-r from-purple-500 to-pink-500' : '' ?>">
+                    <?php if (!empty($user['profile_picture'])): ?>
+                        <img src="<?= htmlspecialchars($user['profile_picture']) ?>" 
+                             alt="<?= htmlspecialchars($user['name']) ?>" 
+                             class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                    <?php endif; ?>
                 </div>
                 <div>
                     <h4 class="font-semibold text-gray-900 dark:text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-purple-600 dark:text-purple-300 text-sm">(You)</span></h4>
@@ -211,8 +231,15 @@ ob_start();
             <input type="hidden" name="post_id" id="editPostId">
             
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
-                    <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                <!-- User Avatar in Edit Modal -->
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden <?= empty($user['profile_picture']) ? 'bg-gradient-to-r from-purple-500 to-pink-500' : '' ?>">
+                    <?php if (!empty($user['profile_picture'])): ?>
+                        <img src="<?= htmlspecialchars($user['profile_picture']) ?>" 
+                             alt="<?= htmlspecialchars($user['name']) ?>" 
+                             class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <?= strtoupper(substr($user['name'], 0, 1)) ?>
+                    <?php endif; ?>
                 </div>
                 <div>
                     <h4 class="font-semibold text-gray-900 dark:text-white"><?= htmlspecialchars($user['name']) ?> <span class="text-purple-600 dark:text-purple-300 text-sm">(You)</span></h4>

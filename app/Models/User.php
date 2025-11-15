@@ -24,9 +24,26 @@ class User {
         return $row ?: null;
     }
 
+
     public static function create(string $name, string $email, string $password): int {
         $stmt = self::connect()->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
         $stmt->execute([$name, $email, $password]);
         return (int)self::connect()->lastInsertId();
+    }
+
+    public static function updateProfilePicture(int $userId, string $profilePicturePath): bool {
+        $stmt = self::connect()->prepare('UPDATE users SET profile_picture = ? WHERE id = ?');
+        return $stmt->execute([$profilePicturePath, $userId]);
+    }
+
+    public static function removeProfilePicture(int $userId): bool {
+        $stmt = self::connect()->prepare('UPDATE users SET profile_picture = NULL WHERE id = ?');
+        return $stmt->execute([$userId]);
+    }
+    public static function findById(int $id): ?array {
+        $stmt = self::connect()->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
     }
 }

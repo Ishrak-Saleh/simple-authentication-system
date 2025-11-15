@@ -241,22 +241,22 @@ class FeedController extends Controller {
         }
     }
 
-        public function toggleTheme() {
-        $user = Session::get('user');
-        if (!$user) {
-            http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
-            return;
-        }
-
-        $currentTheme = Session::get('theme') ?? 'dark';
-        $newTheme = $currentTheme === 'dark' ? 'light' : 'dark';
-        
-        Session::set('theme', $newTheme);
-        
-        echo json_encode([
-            'success' => true,
-            'theme' => $newTheme
-        ]);
+    public function toggleTheme() {
+    $user = Session::get('user');
+    if (!$user) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+        return;
     }
+
+    $currentTheme = Session::get('theme') ?? 'dark';
+    $newTheme = $currentTheme === 'dark' ? 'light' : 'dark';
+    
+    Session::set('theme', $newTheme);
+    
+    echo json_encode([
+        'success' => true,
+        'theme' => $newTheme
+    ]);
+}
 }

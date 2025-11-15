@@ -23,6 +23,7 @@ use app\Core\Session;
 use app\Controllers\AuthController;
 use app\Controllers\DashboardController;
 use app\Controllers\FeedController;
+use app\Controllers\ProfileController; // ADD THIS LINE
 
 Session::start();
 
@@ -48,5 +49,10 @@ $router->post('/feed/update', [FeedController::class, 'updatePost']);
 $router->post('/feed/like', [FeedController::class, 'likePost']);
 $router->post('/feed/unlike', [FeedController::class, 'unlikePost']);
 $router->post('/theme/toggle', [FeedController::class, 'toggleTheme']);
+
+// Profile routes
+$router->get('/profile', [ProfileController::class, 'showProfile']);
+$router->post('/profile/picture/update', [ProfileController::class, 'updateProfilePicture']);
+$router->post('/profile/picture/remove', [ProfileController::class, 'removeProfilePicture']);
 
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');

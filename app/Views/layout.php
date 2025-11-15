@@ -1,9 +1,5 @@
-<?php
-// Get theme from session or default to dark
-$theme = \app\Core\Session::get('theme') ?? 'dark';
-?>
 <!DOCTYPE html>
-<html lang="en" class="<?= $theme === 'dark' ? 'dark' : '' ?>">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,12 +61,20 @@ $theme = \app\Core\Session::get('theme') ?? 'dark';
  
                     <?php if (!empty($_SESSION['user'])): ?>
                     <nav class="flex items-center space-x-4">
-                        <a href="/dashboard" 
-                           class="p-2 rounded-lg transition-colors <?= ($title ?? '') === 'Dashboard | AuthBoard' ? 'bg-primary text-white' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-100' ?>"
+                        <!-- Profile Link with Avatar -->
+                        <a href="/profile" 
+                           class="flex items-center space-x-2 p-2 rounded-lg transition-colors <?= ($title ?? '') === 'Profile | AuthBoard' ? 'bg-primary text-white' : 'text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-100' ?>"
                            title="Profile">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
+                            <?php if (!empty($_SESSION['user']['profile_picture'])): ?>
+                                <img src="<?= htmlspecialchars($_SESSION['user']['profile_picture']) ?>" 
+                                     alt="Profile" 
+                                     class="w-8 h-8 rounded-full object-cover">
+                            <?php else: ?>
+                                <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                    <?= strtoupper(substr($_SESSION['user']['name'], 0, 1)) ?>
+                                </div>
+                            <?php endif; ?>
+                            <span class="hidden sm:inline">Profile</span>
                         </a>
                         
                         <a href="/feed" 
@@ -105,6 +109,7 @@ $theme = \app\Core\Session::get('theme') ?? 'dark';
                     'Dashboard | AuthBoard' => 'Your personal space',
                     'Login | AuthBoard' => 'Project Authboard',
                     'Register | AuthBoard' => 'Developed by Ishrak Saleh Chowdhury',
+                    'Profile | AuthBoard' => 'Your profile space',
                 ];
                 
                 echo $footerTexts[$pageTitle] ?? 'AuthBoard - Connect and share with others';
